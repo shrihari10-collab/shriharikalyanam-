@@ -5,7 +5,7 @@ var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').mat
 var NS='http://www.w3.org/2000/svg';
 
 /* guest name from ?name= */
-var guest=''; try{ guest=(new URLSearchParams(location.search).get('name')||'').replace(/\s+/g,' ').trim().slice(0,60);}catch(e){}
+var guest=''; try{ guest=(new URLSearchParams(location.search).get('name')||'').replace(/[_\s]+/g,' ').trim().slice(0,60);}catch(e){}
 $$('[data-guest]').forEach(function(el){ if(guest){el.textContent=guest;} else if(el.hasAttribute('data-hide-empty')){el.style.display='none';} });
 $$('[data-has-guest]').forEach(function(el){ if(!guest) el.style.display='none'; });
 $$('[data-no-guest]').forEach(function(el){ if(guest) el.style.display='none'; });
