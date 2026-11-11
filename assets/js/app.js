@@ -19,6 +19,38 @@ $$('svg[data-orn]').forEach(function(s){
   var p=document.createElementNS(NS,'path'); p.setAttribute('d',o.d); p.setAttribute('pathLength','1'); s.appendChild(p);
 });
 
+
+/* handwriting: words are "written" left-to-right with a soft pen edge */
+var WSEL='.hero .bless,.hero .names,.hero .sub,.hero .dline,.card p,.card h1,.sec h2.h,.sec .sub,.box small,.box .dt,.box p,.sec>p,.stp,.st,.cap';
+function writeify(el){
+  var tw=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,null), nodes=[], n, spans=[];
+  while((n=tw.nextNode())) nodes.push(n);
+  nodes.forEach(function(t){
+    if(!t.nodeValue.trim()) return;
+    var f=document.createDocumentFragment();
+    t.nodeValue.split(/(\s+)/).forEach(function(p){
+      if(!p) return;
+      if(/^\s+$/.test(p)){ f.appendChild(document.createTextNode(p)); return; }
+      var w=document.createElement('span'); w.className='w'; if(el.classList.contains('gold')||(t.parentNode.closest&&t.parentNode.closest('.gold'))){var g=document.createElement('span'); g.className='gi'; g.textContent=p; w.appendChild(g);} else w.textContent=p; spans.push(w); f.appendChild(w);
+    });
+    t.parentNode.replaceChild(f,t);
+  });
+  var step=Math.min(.14,3.6/Math.max(spans.length,1));
+  spans.forEach(function(w,i){ w.style.setProperty('--d',(i*step).toFixed(3)+'s'); });
+  el.classList.add('wr'); el._wt=(spans.length*step+1.1)*1000;
+}
+function wGo(el){ el.classList.add('wi'); setTimeout(function(){el.classList.add('done')},(el._wt||2000)+400); }
+var wEls=[], wHero=[];
+if(!reduce){
+  $$(WSEL).forEach(function(el){ if(!el.querySelector('.cd')&&!el.closest('.cdwrap')){ writeify(el); (el.closest('.hero')?wHero:wEls).push(el); } });
+}
+var wio=('IntersectionObserver' in window)?new IntersectionObserver(function(es){
+  var hit=es.filter(function(e){return e.isIntersecting}).sort(function(a,b){return a.boundingClientRect.top-b.boundingClientRect.top}), acc=0;
+  hit.forEach(function(e){ var el=e.target; wio.unobserve(el); setTimeout(function(){wGo(el)},acc); acc+=Math.min(el._wt,1600)*.6; });
+},{threshold:.3,rootMargin:'0px 0px -4% 0px'}):null;
+wEls.forEach(function(el){ if(wio) wio.observe(el); else wGo(el); });
+function writeHero(){ var t=200; wHero.forEach(function(el){ setTimeout(function(){wGo(el)},t); t+=Math.min(el._wt,1800)*.75; }); }
+
 /* reveal on scroll */
 var io=('IntersectionObserver' in window)?new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){e.target.classList.add('in'); $$('svg.draw',e.target).forEach(function(s){s.classList.add('go')}); io.unobserve(e.target);} })},{threshold:.15}):null;
 $$('.rv').forEach(function(el){ io?io.observe(el):el.classList.add('in'); });
@@ -33,7 +65,7 @@ var scroll=$('#scroll'), seal=$('#seal'), opened=false;
 document.documentElement.classList.add('locked'); window.scrollTo(0,0);
 function finish(){
   document.body.classList.add('opened'); document.documentElement.classList.remove('locked'); window.scrollTo(0,0);
-  startFx();
+  startFx(); writeHero();
   $$('.hero .rv').forEach(function(el,i){ setTimeout(function(){el.classList.add('in')},150+i*180); });
 }
 function openIt(){
@@ -87,9 +119,8 @@ if(f){ f.addEventListener('submit',function(e){
 /* story: Saptapadi */
 var scenes=$$('.scene'), lamps=$$('#spbar .dya'), sbar=$('#spbar'), thread=$('#thread'), pathEl=$('#path');
 function lampsUpdate(){
-  var n=0; $$('.scene.lit').forEach(function(s){ var k=+s.getAttribute('data-step'); if(k<=7&&k>n) n=k; });
-  if($('.scene[data-step="8"].lit')) n=7;
-  lamps.forEach(function(l,i){ l.classList.toggle('on',i<n); }); if(sbar) sbar.classList.toggle('all',n>=7);
+  var n=0; $$('.scene.lit').forEach(function(s){ var k=+s.getAttribute('data-step'); if(k>n) n=k; });
+  lamps.forEach(function(l,i){ l.classList.toggle('on',i<n); }); if(sbar) sbar.classList.toggle('all',n>=8);
 }
 if(scenes.length){
   if('IntersectionObserver' in window){

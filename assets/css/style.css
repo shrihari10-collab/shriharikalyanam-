@@ -225,3 +225,20 @@ body.opened #snd{display:grid}
 .scene.lit .rsvpbtn{opacity:1}
 @keyframes glowbtn{50%{box-shadow:0 0 24px rgba(255,214,120,.75)}}
 @media (prefers-reduced-motion:reduce){.pic-in{clip-path:none}.pic img{filter:none}.stp,.st,.cap,.cdwrap,.rsvpbtn,.ft{opacity:1;transform:none}.dya .fl{opacity:1;transform:none}}
+
+/* handwriting reveal */
+.w{display:inline-block;padding:.3em .12em;margin:-.3em -.12em;
+ -webkit-mask-image:linear-gradient(90deg,#000 42%,transparent 58%);mask-image:linear-gradient(90deg,#000 42%,transparent 58%);
+ -webkit-mask-size:330% 100%;mask-size:330% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+ -webkit-mask-position:100% 0;mask-position:100% 0}
+.wr.wi .w{-webkit-mask-position:0 0;mask-position:0 0;transition:mask-position 1s cubic-bezier(.3,.6,.3,1) var(--d,0s),-webkit-mask-position 1s cubic-bezier(.3,.6,.3,1) var(--d,0s)}
+.wr.done .w{-webkit-mask:none;mask:none}
+.stp.wr,.st.wr,.cap.wr{opacity:1;transform:none;transition:none}
+.gold.wr{background:none;filter:none}
+.gold.wr .w{filter:drop-shadow(0 1px 0 rgba(50,6,14,.55))}
+.gold.wr .gi{display:inline-block;background:var(--goldgrad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+
+.scene.finale{padding-top:100px}
+.sp-bar .dya{width:18px;height:17px}
+.scene{padding-top:74px}.scene.finale{padding-top:104px}
+.cd{-webkit-user-select:none;user-select:none}
