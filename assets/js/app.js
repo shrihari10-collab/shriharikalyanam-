@@ -159,3 +159,20 @@ function startFx(){
   })(0);
 }
 })();
+
+/* keep ceremonial first lines + title on ONE line on narrow phones */
+(function(){
+  var FS='.paper-in .sl,.paper-in h2,.card .sh,.card h1.tt,.hero .bless';
+  function fit(el){
+    el.style.whiteSpace='nowrap'; el.style.fontSize='';
+    var fs=parseFloat(getComputedStyle(el).fontSize), n=0;
+    var r=document.createRange(); r.selectNodeContents(el);
+    function cw(){ var a=el.getBoundingClientRect().width, b=0; for(var k=0;k<el.childNodes.length;k++){ r.selectNode(el.childNodes[k]); var q=r.getBoundingClientRect(); b=Math.max(b,q.width); } var rr=document.createRange(); rr.selectNodeContents(el); var all=rr.getBoundingClientRect().width; return Math.max(all,b); }
+    var lim=function(){ var par=el.parentElement, c=getComputedStyle(par); return (par.clientWidth-parseFloat(c.paddingLeft)-parseFloat(c.paddingRight))*.96; };
+    while(cw()>lim() && fs>8.5 && n++<60){ fs-=.5; el.style.fontSize=fs+'px'; }
+  }
+  function fitAll(){ var l=document.querySelectorAll(FS); for(var i=0;i<l.length;i++) fit(l[i]); }
+  fitAll();
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(fitAll);
+  addEventListener('load',fitAll); addEventListener('resize',fitAll);
+})();
