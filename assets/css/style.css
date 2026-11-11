@@ -242,3 +242,4 @@ body.opened #snd{display:grid}
 .sp-bar .dya{width:18px;height:17px}
 .scene{padding-top:74px}.scene.finale{padding-top:104px}
 .cd{-webkit-user-select:none;user-select:none}
+.pic.wide img,.scene.lit .pic.wide img{transform:none;translate:none}
