@@ -7,13 +7,6 @@ var NS='http://www.w3.org/2000/svg';
 /* guest name from ?name= */
 var guest=''; try{ guest=(new URLSearchParams(location.search).get('name')||'').replace(/[_\s]+/g,' ').trim().slice(0,60);}catch(e){}
 $$('[data-guest]').forEach(function(el){ if(guest){el.textContent=guest;} else if(el.hasAttribute('data-hide-empty')){el.style.display='none';} });
-if(guest){
-  var fem=/^(ಶ್ರೀಮತಿ|ಶ್ರೀಮತೀ|ಸೌ[.\s]|smt|shrimati|mrs)/i.test(guest), mal=!fem&&/^(ಶ್ರೀ|shri|sri|mr[.\s])/i.test(guest);
-  $$('[data-pre],[data-post]').forEach(function(x){
-    var v=x.getAttribute('data-named'); if(v===null) v=fem?x.getAttribute('data-fem'):(mal?x.getAttribute('data-male'):null);
-    if(v!==null) x.textContent=v;
-  });
-}
 $$('[data-has-guest]').forEach(function(el){ if(!guest) el.style.display='none'; });
 $$('[data-no-guest]').forEach(function(el){ if(guest) el.style.display='none'; });
 var gi=$('#guestInput'); if(gi&&guest) gi.value=guest;
